@@ -646,10 +646,7 @@ h1, h2, h3, h4, h5, h6 {
    About Page Styles
    ===================================================== */
 .about-intro {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-12);
-    align-items: center;
+    /* Grid removed - handled by .about-grid */
 }
 
 .about-text h2 {
