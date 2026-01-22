@@ -164,43 +164,47 @@ function initContactForm() {
     if (!form) return;
 
     form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
         // Basic validation
         const firstName = form.querySelector('#firstName').value.trim();
         const lastName = form.querySelector('#lastName').value.trim();
         const email = form.querySelector('#email').value.trim();
 
         if (!firstName || !lastName || !email) {
+            e.preventDefault();
             alert('Please fill in all required fields.');
             return;
         }
 
         if (!isValidEmail(email)) {
+            e.preventDefault();
             alert('Please enter a valid email address.');
             return;
         }
 
-        // Collect form data
+        // If validation passes, submit to Formspree via fetch
+        e.preventDefault();
+
         const formData = new FormData(form);
-        const data = {};
-        formData.forEach(function(value, key) {
-            data[key] = value;
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(function(response) {
+            if (response.ok) {
+                form.style.display = 'none';
+                formSuccess.classList.add('show');
+                form.reset();
+            } else {
+                alert('There was a problem submitting the form. Please try again.');
+            }
+        })
+        .catch(function(error) {
+            alert('There was a problem submitting the form. Please try again.');
         });
-
-        // In production, you would send this to your backend
-        // For now, we'll simulate a successful submission
-        console.log('Form submitted:', data);
-
-        // Show success message
-        form.style.display = 'none';
-        formSuccess.classList.add('show');
-
-        // Optionally, you could integrate with:
-        // - Formspree
-        // - Netlify Forms
-        // - Your own backend API
-        // - Email service like SendGrid
     });
 }
 
